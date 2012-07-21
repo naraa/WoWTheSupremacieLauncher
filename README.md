@@ -20,7 +20,13 @@ This application have an auto-updater already include you only need to change th
 This application support all major language of wow client
 Language supported : frFR , EnUS , EnGB
 
-4) Unpatcher <br/>
+4) Realmlist Changer <br/>
+---
+This application allow you to change realmlist quickly 
+You can store 5 realmlist and swap quickly 
+
+
+5) Unpatcher <br/>
 ---
 This application backup all your original file so you can patch your official WoW client and after that unpatch to original WoW 
 I recommand to backup your WoW client also in case or error.
