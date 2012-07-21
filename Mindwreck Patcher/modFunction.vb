@@ -8,16 +8,25 @@ Module modFunction
 
     'Obtient le chemin du dossier ou le .exe est lancé sans \ à la fin
     Public file_path As String = Application.StartupPath
-
+    'stoque la langue détecter
+    Public language As String
     'Déclaration des variable pour la mise à jour.
     Public Progress As New ProgressBar
     Public url As String
     Public bool_showUI As Boolean
     Public Timer1 As New Timer
 
-    '----------------------------------------------------------------------- PROCÉDURE ET FUNCTION --------------------------------------------------------'
+    '::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: PROCÉDURE ET FUNCTION :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
 
-
+    'on vérifie si le jeux n'est pas déjà patcher 
+    Public Function game_already_patch()
+        If System.IO.File.Exists(file_path & "\Data\wow-update-13623.MPQ") Or System.IO.File.Exists(file_path & "\Data\wow-update-13623.MPQ") Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+           
     'fonction qui permet de vérifier si l'internet est disponible
     Public Function connexionInternet() As Boolean
         Dim objUrl As New System.Uri("http://www.kobixxe.com/")
@@ -111,7 +120,7 @@ Module modFunction
 
 
     'Sub fonction qui permet d'appeler un délais de (x) secondes
-    Sub Delay(ByVal dblSecs As Double)
+    Public Sub Delay(ByVal dblSecs As Double)
 
         Const OneSec As Double = 1.0# / (1440.0# * 60.0#)
         Dim dblWaitTil As Date
@@ -150,12 +159,12 @@ Module modFunction
     'Function de mise à jours du status d'opération
     Public Function UpdateStatus(ByVal ligne1 As String, Optional ByVal ligne2 As String = "", _
                                  Optional ByVal ligne3 As String = "", Optional ByVal ligne4 As String = "") As String
-        UpdateStatus = vbCrLf & "=======================================" & vbCrLf
+        UpdateStatus = "::::::::::::::::::::::::::::::::::::::::::::::::::::::::" & vbCrLf & vbCrLf
         UpdateStatus += ligne1 & vbCrLf
         UpdateStatus += ligne2 & vbCrLf
         UpdateStatus += ligne3 & vbCrLf
         UpdateStatus += ligne4 & vbCrLf
-        UpdateStatus += "=======================================" & vbCrLf
+        UpdateStatus += "::::::::::::::::::::::::::::::::::::::::::::::::::::::::" & vbCrLf
         Return UpdateStatus
     End Function
 

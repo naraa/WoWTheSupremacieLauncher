@@ -117,29 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="Label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="Label1.Text" xml:space="preserve">
-    <value>Les langues suporter par notre application sont les suivante :
-{ frFR  ,  enUS  ,  enGB }
- Si vous avez un autre langue que celle-ci cette application ne peux fonctionner.
+    <value>
+Les langues supporté par notre application sont les suivantes :
 
-Pour jouer sur nos private server :
-1) Vous devez mettre cette application a la racine de votre dossier de jeu.
-2) Lancer le jeux en appuyant sur le bouton jouer de notre application.
+                                                                          frFR  ,  enUS  ,  enGB
+ 
+Si votre client de jeu comporte une autre langue que celle-ci cette application ne peux fonctionner.
 
-Pour retourner jouer sur les servers officiels
-1)Lancer notre application qui est toujours a la racine de votre dossier de jeu.
-2)Appuyer sur le bouton Remove Patch
-3)Fermer notre application et lancer le jeux normalement avec le launcher officiel.</value>
+Pour jouer sur nos serveurs privé :
+
+1) Vous devez mettre cette application à la racine de votre dossier de jeu.
+2) Lancer notre application.
+3) Appuyez sur le bouton jouer / Play de notre Launcher.
+4) Attendre que le jeu ce lance automatiquement.
+
+Pour  jouer sur les serveurs officiels :
+
+1) Lancer notre application qui doit toujours ce trouver à la racine de votre dossier de jeu.
+2) Appuyer sur le bouton Remove Patch
+3) Fermer notre application et lancer le jeux normalement avec le launcher officiel.
+
+Pour utiliser notre launcher pour vous connecter à un autre serveur privé :
+
+1) Appuyer sur le bouton realmlist situé dans la barre de menu dans le haut du launcher
+2) Sélectionner un Realmlist ou ajouter en un.
+3) Appuyer sur appliquer et cliquer sur jouer 
+
+</value>
   </data>
-  <metadata name="PictureBox1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
