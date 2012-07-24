@@ -5,38 +5,56 @@ Imports Microsoft.Win32
 Imports System.Diagnostics
 
 Public Class frmMain
-
-
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-        
-
         ':::::::::::::::::::::::::::::::  Détection initial des paramètres / emplacement / Langue / Internet ::::::::::::::::::::::::::::::::::::::::::::
-
-    'vérification de l'emplacement du patcher
+        'vérification de l'emplacement du patcher
         If Not System.IO.File.Exists(file_path & "\Battle.net.dll") Or Not System.IO.Directory.Exists(file_path & "\Data") Then
             MsgBox("Vous devez lancer cette application à partir de la racine du dossier de jeux world of warcraft. Déplacer cette application au bon endroit et relancer là.", _
                    MsgBoxStyle.Critical, "Erreur de lancement")
             Me.Close()
         Else
 
-    'si une connextion internet est disponible
-            If connexionInternet() = True Then
-    'on vérifie si une mise à jour est disponible                   '-> ici pour changer la version de la mise a jour
-                checkforupdate("http://dl.dropbox.com/u/68710014/version.txt", "2.0.4")
-            Else
-    'on informe qu'aucune connexion est disponible et quil est impossible de vériffier la mise à jour
-                MsgBox("Vous n'êtes pas connectés à internet!" & vbCrLf _
-                       & "Il est donc impossible de vérifier si une mise à jour de l'application est disponible.", _
-                       MsgBoxStyle.Information, "Connexion internet indisponible")
-            End If
 
-    'Détection de la langue du jeux (Possibilité d'ajouter des langues.)
-    Dim langs(2) As String
+            '  Vous devez cliquer sur My Projet dans l'explorateur de solution et aller dans parametres pour entrez votre realmlist par default 
+            '  dans la case themindwreck
+            '
+            '  Vous devez enlevez le message box d'avertissement
+            '
+            'Supprimer ce msgbox() apres avoir configurer le realmlist par default
+            MsgBox("Vous devez cliquer sur My Projet dans l'explorateur de solution et aller dans parametres pour entrez votre realmlist par default dans la case themindwreck" _
+                   , MsgBoxStyle.Critical, "Configuration inclomplette")
+
+
+            '::::::::::::::::::::::::::::::::::::::::::::::::::: AUTO-UPDATER PEUX (À configurer) ::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+            ''si une connextion internet est disponible
+            'If connexionInternet() = True Then
+
+            '    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            '    'cette fonction est désactivé pour la réactivé consulter les commentaire 
+            '    'du block de code de la fonction checkforupdate()
+            '    'syntax checkforupdate("lien vers un fichier version.txt contenant la version actuelle de l'application sur le serveur de mise à jours","version de la nouvelle build")
+            '    'le fichier version.txt doit etre en mode Read Execute sur le serveur et doit contenir seulement la version ex: 2.0.0
+            '    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+            '    'on vérifie si une mise à jour est disponible                   '-> ici pour changer la version de la mise a jour
+            '    checkforupdate("http://localhost/update/version.txt", "2.0.4")
+            'Else
+            '    'on informe qu'aucune connexion est disponible et quil est impossible de vériffier la mise à jour
+            '    MsgBox("Vous n'êtes pas connectés à internet!" & vbCrLf _
+            '           & "Il est donc impossible de vérifier si une mise à jour de l'application est disponible.", _
+            '           MsgBoxStyle.Information, "Connexion internet indisponible")
+            'End If
+
+
+            ':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+            'Détection de la langue du jeux (Possibilité d'ajouter des langues.)
+            Dim langs(2) As String
             langs(2) = "frFR"
             langs(1) = "enUS"
             langs(0) = "enGB"
-    Dim langs_text(2) As String
+            Dim langs_text(2) As String
             langs_text(2) = "Français Europe"
             langs_text(1) = "Anglais États-Unies"
             langs_text(0) = "Anglais Grande Bretagne"
@@ -53,29 +71,29 @@ Public Class frmMain
                 End If
             Next
 
-    '::::::::::::::::::::::::::::::::::::::::::      Initialisation des éléments de l'interface      :::::::::::::::::::::::::::::::::::::
+            '::::::::::::::::::::::::::::::::::::::::::      Initialisation des éléments de l'interface      :::::::::::::::::::::::::::::::::::::
 
-    'on commence la trame sonore de fond
+            'on commence la trame sonore de fond
             My.Computer.Audio.Play(My.Resources.sound, AudioPlayMode.BackgroundLoop)
 
-    'affichage à 0
+            'affichage à 0
             pgrbStatus.Value = 0
             lblInfo.Text = UpdateStatus("Initialisation du patcher.", "Veuillez patienter un moment S.V.P.", "Initialisation terminer.")
 
-    '(play / patch)
+            '(play / patch)
             Me.btnPatch.BackgroundImage = My.Resources.btnPlay_patcher
             Me.btnPatch.BackgroundImageLayout = ImageLayout.Stretch
             Me.btnPatch.FlatStyle = FlatStyle.Flat
-    '(remove patch)
+            '(remove patch)
             Me.btnUnpatch.BackgroundImage = My.Resources.btnRem_patcher
             Me.btnUnpatch.BackgroundImageLayout = ImageLayout.Stretch
             Me.btnUnpatch.FlatStyle = FlatStyle.Flat
 
-    'sélection du realm par défault si aucun n'est sélectionner.
+            'sélection du realm par défault si aucun n'est sélectionner.
             If My.Settings.RealmSelected = "" Then
                 My.Settings.RealmSelected = My.Settings.themindwreck
             End If
-    'affichage du realmlist sélecitonner
+            'affichage du realmlist sélecitonner
             lblRealmlistSelected.Text = My.Settings.RealmSelected
             lblRealmlistSelected.ForeColor = Color.DarkGreen
 
@@ -453,107 +471,142 @@ Public Class frmMain
     End Sub
 
 #Region "Updater"
-    '::::::::::::::::::::::::::::::::::::::::::::::::: UPDATE :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
 
-    Sub checkforupdate(ByVal updatetextfileurl As String, ByVal currentversion As String)
-        'on supprime l'ancienne version du fichier version
-        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
-            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/version.dat")
-        End If
+    ''::::::::::::::::::::::::::::::::::::::::::::::::: UPDATE :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
+    ''Cette fonction est temporairement désactivé vous devez la configuré pour envoyer vos propre mise à jour
+    ''de l'application une section dans le form_load est aussi à configuré.
+    ''
+    ''Pour configurer le système de mise à jour.
+    ''
+    ''1) 
+    '' ->Vous devez avoir un serveur web configuré ou vous pouvez utilisé dropbox Gratuit
+    '' ->Un dossier sur votre serveur web 
+    ''   ex: Update contenant un fichier version.txt et une archive sfx Release.exe
+    ''   dans ce fichier version.text vous aller inscrire la version de l'application qui est sur le serveur
+    ''      
+    ''   Dans l'archive sfx créé avec winrar déposer .exe de l'application ainsi que les fichier que vous
+    ''   vous voulez déploiyer durant la mise à jour ex: Release.exe <-- (Archive sfx créé avec winrar)
+    ''
+    '' ->Vous devez modifier la ligne suivante dans le sub checkforupdate() :
+    ''   
+    ''   downloadupdate("http://localhost/Update/Release.exe", True)
+    ''
+    ''   Remplacer le lien pour le faire pointer sur votre archive sfx sur votre serveur
+    ''   dans notre exemple http://server-adresse/Update/Release.exe
+    ''
+    ''2)
+    '' ->Dans frmMain_Load() modifier la ligne suivante :
+    ''   checkforupdate("http://localhost/update/version.txt", "2.0.4")
+    ''
+    ''   Remplacer le lien pour le faire pointer sur votre fichier version.txt
+    ''   ex: http://server-adresse/Update/version.txt
+    ''   et mettre le num/ro de version de la build que vous creer actuellement
+    ''
+    ''   la version dans le fichier version.txt et la version dans le release.exe et a la ligne
+    ''   checkforupdate() doivent etre la meme pour que lapplication ne demande pas de mise a jour
+    ''
+    ''3) decommenter toute la section update ci bas et la petite section dans le form load
+    ''::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-        'on supprime l'ancienne version du fichier update
-        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
-            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/update.exe")
-        End If
+    'Sub checkforupdate(ByVal updatetextfileurl As String, ByVal currentversion As String)
+    '    'on supprime l'ancienne version du fichier version
+    '    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
+    '        My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/version.dat")
+    '    End If
 
-        Try
-            My.Computer.Network.DownloadFile(updatetextfileurl, My.Application.Info.DirectoryPath + "/version.dat")
-            If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
-                Dim reader As New System.IO.StreamReader(My.Application.Info.DirectoryPath + "/version.dat")
-                Dim read As String = reader.ReadToEnd
-                reader.Close()
-                If read <> currentversion Then
-                    MsgBox("Attention !" & vbCrLf & "Une nouvelle version est disponible pour The Mindwreck Patcher." & vbCrLf & _
-                           "Vous avez actuellement la version " & currentversion & "." & vbCrLf & _
-                           "La version la plus récente de The Mindwreck Patcher est " & read & "." & vbCrLf & vbCrLf & _
-                            "La programme de mise à jour sera automatiquement lancé à la fermeture de cette fenêtre." & vbCrLf & vbCrLf & _
-                            "Appuyez sur OK pour continué.", _
-                            MsgBoxStyle.Information, "The Mindwreck Patcher - Mise à jour disponible")
+    '    'on supprime l'ancienne version du fichier update
+    '    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
+    '        My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/update.exe")
+    '    End If
 
-                    Try
-                        'on supprime les fichier de version 
-                        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
-                            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/version.dat")
-                        End If
-                        'on supprime les fichiers update
-                        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
-                            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/update.exe")
-                        End If
-                        'on appel le sup downloadupdate
-                        downloadupdate("http://dl.dropbox.com/u/68710014/Release.exe", True)
+    '    Try
+    '        My.Computer.Network.DownloadFile(updatetextfileurl, My.Application.Info.DirectoryPath + "/version.dat")
+    '        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
+    '            Dim reader As New System.IO.StreamReader(My.Application.Info.DirectoryPath + "/version.dat")
+    '            Dim read As String = reader.ReadToEnd
+    '            reader.Close()
+    '            If read <> currentversion Then
+    '                MsgBox("Attention !" & vbCrLf & "Une nouvelle version est disponible pour The Mindwreck Patcher." & vbCrLf & _
+    '                       "Vous avez actuellement la version " & currentversion & "." & vbCrLf & _
+    '                       "La version la plus récente de The Mindwreck Patcher est " & read & "." & vbCrLf & vbCrLf & _
+    '                        "La programme de mise à jour sera automatiquement lancé à la fermeture de cette fenêtre." & vbCrLf & vbCrLf & _
+    '                        "Appuyez sur OK pour continué.", _
+    '                        MsgBoxStyle.Information, "The Mindwreck Patcher - Mise à jour disponible")
 
-                    Catch ex As Exception
-                        MsgBox("Erreur : " + ex.Message)
-                    End Try
+    '                Try
+    '                    'on supprime les fichier de version 
+    '                    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/version.dat") Then
+    '                        My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/version.dat")
+    '                    End If
+    '                    'on supprime les fichiers update
+    '                    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
+    '                        My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "/update.exe")
+    '                    End If
+    '                    'on appel le sup downloadupdate
+    '                    downloadupdate("http://server-adresse/release.exe", True)
 
-                Else
-                    'on fais rien le programme est à jour.
-                End If
-            Else
-                MsgBox("Une erreur c'est produite lors de la vérification de la version du programme.", MsgBoxStyle.Critical)
-            End If
-        Catch ex As Exception
-            MsgBox("Erreur avec le programme de mise à jour, " + ex.Message, MsgBoxStyle.Critical)
-        End Try
-    End Sub
+    '                Catch ex As Exception
+    '                    MsgBox("Erreur : " + ex.Message)
+    '                End Try
 
-    Sub downloadupdate(ByVal updaterexecuteableurl As String, ByVal showUI As Boolean)
-        Try
-            My.Computer.Network.DownloadFile(updaterexecuteableurl, My.Application.Info.DirectoryPath + "/update.exe", "", "", showUI, 99999999, True)
-            If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
+    '            Else
+    '                'on fais rien le programme est à jour.
+    '            End If
+    '        Else
+    '            MsgBox("Une erreur c'est produite lors de la vérification de la version du programme.", MsgBoxStyle.Critical)
+    '        End If
+    '    Catch ex As Exception
+    '        MsgBox("Erreur avec le programme de mise à jour, " + ex.Message, MsgBoxStyle.Critical)
+    '    End Try
+    'End Sub
 
-                url = updaterexecuteableurl
-                bool_showUI = showUI
-                Timer1.Interval = 10
-                Progress.Maximum = 1000
-                Timer1.Enabled = True
-                Timer1.Start()
-                AddHandler Timer1.Tick, AddressOf Timer1_tick
-            Else
-                downloadupdate(updaterexecuteableurl, showUI)
-            End If
+    'Sub downloadupdate(ByVal updaterexecuteableurl As String, ByVal showUI As Boolean)
+    '    Try
+    '        My.Computer.Network.DownloadFile(updaterexecuteableurl, My.Application.Info.DirectoryPath + "/update.exe", "", "", showUI, 99999999, True)
+    '        If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
 
-        Catch ex As Exception
-            MsgBox("Erreur lors du téléchargement de la mise à jour, " + ex.Message)
-        End Try
-    End Sub
+    '            url = updaterexecuteableurl
+    '            bool_showUI = showUI
+    '            Timer1.Interval = 10
+    '            Progress.Maximum = 1000
+    '            Timer1.Enabled = True
+    '            Timer1.Start()
+    '            AddHandler Timer1.Tick, AddressOf Timer1_tick
+    '        Else
+    '            downloadupdate(updaterexecuteableurl, showUI)
+    '        End If
 
-    Sub Timer1_tick(ByVal sender As Object, ByVal e As System.EventArgs)
-        Try
-            Do Until Progress.Value = 1000
-                Progress.Value = Progress.Value + 1
-            Loop
-            If Progress.Value = 1000 Then
-                If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
-                    Shell(My.Application.Info.DirectoryPath + "/update.exe", AppWinStyle.NormalFocus)
-                    Me.Close()
-                    Timer1.Stop()
-                    Timer1.Enabled = False
-                    Exit Sub
-                Else
-                    downloadupdate(url, bool_showUI)
-                End If
-            End If
-        Catch ex As Exception
-            If ex.Message.Contains("not") Then
-                Shell(My.Application.Info.DirectoryPath + "/update.exe", AppWinStyle.NormalFocus)
-                Me.Close()
-                Timer1.Stop()
-                Timer1.Enabled = False
-            End If
-        End Try
-    End Sub
-    '::::::::::::::::::::::::::::::::::::::::::::::::::::::::: /UPDATE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
+    '    Catch ex As Exception
+    '        MsgBox("Erreur lors du téléchargement de la mise à jour, " + ex.Message)
+    '    End Try
+    'End Sub
+
+    'Sub Timer1_tick(ByVal sender As Object, ByVal e As System.EventArgs)
+    '    Try
+    '        Do Until Progress.Value = 1000
+    '            Progress.Value = Progress.Value + 1
+    '        Loop
+    '        If Progress.Value = 1000 Then
+    '            If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "/update.exe") Then
+    '                Shell(My.Application.Info.DirectoryPath + "/update.exe", AppWinStyle.NormalFocus)
+    '                Me.Close()
+    '                Timer1.Stop()
+    '                Timer1.Enabled = False
+    '                Exit Sub
+    '            Else
+    '                downloadupdate(url, bool_showUI)
+    '            End If
+    '        End If
+    '    Catch ex As Exception
+    '        If ex.Message.Contains("not") Then
+    '            Shell(My.Application.Info.DirectoryPath + "/update.exe", AppWinStyle.NormalFocus)
+    '            Me.Close()
+    '            Timer1.Stop()
+    '            Timer1.Enabled = False
+    '        End If
+    '    End Try
+    'End Sub
+    ''::::::::::::::::::::::::::::::::::::::::::::::::::::::::: /UPDATE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
 #End Region
 
 

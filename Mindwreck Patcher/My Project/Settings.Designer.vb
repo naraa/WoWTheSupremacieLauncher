@@ -54,15 +54,6 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("silverweed.no-ip.org:8090")>  _
-        Public ReadOnly Property themindwreck() As String
-            Get
-                Return CType(Me("themindwreck"),String)
-            End Get
-        End Property
-        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
@@ -192,6 +183,18 @@ Namespace My
             End Get
             Set
                 Me("RealmSelected") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("your.realmlist.com:8090")>  _
+        Public Property themindwreck() As String
+            Get
+                Return CType(Me("themindwreck"),String)
+            End Get
+            Set
+                Me("themindwreck") = value
             End Set
         End Property
     End Class
